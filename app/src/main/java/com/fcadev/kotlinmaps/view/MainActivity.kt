@@ -1,10 +1,11 @@
-package com.fcadev.kotlinmaps
+package com.fcadev.kotlinmaps.view
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import com.fcadev.kotlinmaps.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

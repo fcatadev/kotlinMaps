@@ -1,4 +1,4 @@
-package com.fcadev.kotlinmaps
+package com.fcadev.kotlinmaps.view
 
 import android.Manifest
 import android.content.SharedPreferences
@@ -14,6 +14,8 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.room.Room
+import com.fcadev.kotlinmaps.R
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -22,6 +24,9 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.fcadev.kotlinmaps.databinding.ActivityMapsBinding
+import com.fcadev.kotlinmaps.model.Place
+import com.fcadev.kotlinmaps.roomdb.PlaceDao
+import com.fcadev.kotlinmaps.roomdb.PlaceDatabase
 import com.google.android.material.snackbar.Snackbar
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
@@ -35,6 +40,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
     private var trackBoolean : Boolean? = null
     private var selectedLatitude : Double? = null
     private var selectedLongitude : Double? = null
+    private lateinit var db : PlaceDatabase
+    private lateinit var placeDao: PlaceDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +60,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         trackBoolean = false
         selectedLatitude = 0.0
         selectedLongitude = 0.0
+
+        db = Room.databaseBuilder(applicationContext, PlaceDatabase::class.java, "Places").build()
+        placeDao = db.placeDao()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -131,9 +141,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
 
     fun save (view: View){
 
+        if (selectedLatitude != null && selectedLongitude != null){
+            val place = Place(binding.placeText.text.toString(), selectedLatitude!!, selectedLongitude!!)
+            placeDao.insert(place)
+        }
+
     }
 
     fun delete (view: View){
+
+
 
     }
 
